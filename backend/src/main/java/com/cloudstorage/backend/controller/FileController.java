@@ -4,6 +4,7 @@ import com.cloudstorage.backend.model.FileEntity;
 import com.cloudstorage.backend.repository.FileRepository;
 import com.cloudstorage.backend.service.CloudinaryService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +57,7 @@ public class FileController {
     @DeleteMapping("/{id}")
     public void trashFile(@PathVariable Long id) {
         FileEntity file = fileRepository.findById(id).orElseThrow();
-        file.setTrashed(true); // soft delete — goes to Trash, not permanently gone
+        file.setTrashed(true);
         fileRepository.save(file);
     }
 
@@ -70,12 +71,12 @@ public class FileController {
     @GetMapping("/search")
     public Page<FileEntity> search(
             @RequestParam Long ownerId,
-            @RequestParam String query,
+            @RequestParam(defaultValue = "") String query,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<FileEntity> results = fileRepository
-            .findByOwnerIdAndTrashedFalseAndNameContainingIgnoreCase(ownerId, query);
-        return new org.springframework.data.domain.PageImpl<>(results, pageable, results.size());
+                .findByOwnerIdAndTrashedFalseAndNameContainingIgnoreCase(ownerId, query);
+        return new PageImpl<>(results, pageable, results.size());
     }
 }

@@ -10,9 +10,14 @@ import java.util.UUID;
 @Service
 public class CloudinaryService {
 
-    @Value("${cloudinary.cloudName}") private String cloudName;
-    @Value("${cloudinary.apiKey}") private String apiKey;
-    @Value("${cloudinary.apiSecret}") private String apiSecret;
+    @Value("${cloudinary.cloudName}")
+    private String cloudName;
+
+    @Value("${cloudinary.apiKey}")
+    private String apiKey;
+
+    @Value("${cloudinary.apiSecret}")
+    private String apiSecret;
 
     private Cloudinary cloudinary() {
         Map<String, String> config = new HashMap<>();
@@ -22,14 +27,9 @@ public class CloudinaryService {
         return new Cloudinary(config);
     }
 
-    /**
-     * Generates a short-lived "permission slip" (signature) that lets the
-     * BROWSER upload directly to Cloudinary, without the file ever
-     * passing through our own server.
-     */
     public Map<String, Object> generateUploadSignature() {
         long timestamp = System.currentTimeMillis() / 1000L;
-        String publicId = UUID.randomUUID().toString(); // unique file id, prevents name collisions
+        String publicId = UUID.randomUUID().toString();
 
         Map<String, Object> paramsToSign = new HashMap<>();
         paramsToSign.put("timestamp", timestamp);

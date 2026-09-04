@@ -15,43 +15,21 @@ public class FileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long ownerId; // added to match the database index requirement
-
-    @Column(nullable = false)
-    private String fileName;
-
-    private String name; // used for renaming
-
-    private Long folderId; // used for moving folders
-
-    private boolean trashed = false; // used for soft delete/trash
-
-    @Column(nullable = false)
+    private String name;
     private String cloudinaryPublicId;
-
-    @Column(nullable = false, length = 1000)
     private String url;
+    private Long sizeBytes;
+    private String contentType;
+    private Long ownerId;
+    private Long folderId;
+    private boolean trashed = false;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    private LocalDateTime uploadedAt = LocalDateTime.now();
-
-    // --- Getters and Setters ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getOwnerId() { return ownerId; }
-    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
-
-    public String getFileName() { return fileName; }
-    public void setFileName(String fileName) { this.fileName = fileName; }
-
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-
-    public Long getFolderId() { return folderId; }
-    public void setFolderId(Long folderId) { this.folderId = folderId; }
-
-    public boolean isTrashed() { return trashed; }
-    public void setTrashed(boolean trashed) { this.trashed = trashed; }
 
     public String getCloudinaryPublicId() { return cloudinaryPublicId; }
     public void setCloudinaryPublicId(String cloudinaryPublicId) { this.cloudinaryPublicId = cloudinaryPublicId; }
@@ -59,6 +37,20 @@ public class FileEntity {
     public String getUrl() { return url; }
     public void setUrl(String url) { this.url = url; }
 
-    public LocalDateTime getUploadedAt() { return uploadedAt; }
-    public void setUploadedAt(LocalDateTime uploadedAt) { this.uploadedAt = uploadedAt; }
+    public Long getSizeBytes() { return sizeBytes; }
+    public void setSizeBytes(Long sizeBytes) { this.sizeBytes = sizeBytes; }
+
+    public String getContentType() { return contentType; }
+    public void setContentType(String contentType) { this.contentType = contentType; }
+
+    public Long getOwnerId() { return ownerId; }
+    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
+
+    public Long getFolderId() { return folderId; }
+    public void setFolderId(Long folderId) { this.folderId = folderId; }
+
+    public boolean isTrashed() { return trashed; }
+    public void setTrashed(boolean trashed) { this.trashed = trashed; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }
