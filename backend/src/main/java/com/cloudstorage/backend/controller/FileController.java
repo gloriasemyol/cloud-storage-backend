@@ -4,7 +4,6 @@ import com.cloudstorage.backend.model.FileEntity;
 import com.cloudstorage.backend.repository.FileRepository;
 import com.cloudstorage.backend.service.CloudinaryService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -68,15 +67,25 @@ public class FileController {
         return fileRepository.save(file);
     }
 
+    @GetMapping("/trash")
+    public List<FileEntity> getTrash(@RequestParam Long ownerId) {
+        return fileRepository.findByOwnerIdAndTrashedTrue(ownerId);
+    }
+
     @GetMapping("/search")
     public Page<FileEntity> search(
             @RequestParam Long ownerId,
             @RequestParam(defaultValue = "") String query,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "name") String sortBy) {
+        
         Pageable pageable = PageRequest.of(page, size);
-        List<FileEntity> results = fileRepository
-                .findByOwnerIdAndTrashedFalseAndNameContainingIgnoreCase(ownerId, query);
-        return new PageImpl<>(results, pageable, results.size());
+        
+        if ("date".equalsIgnoreCase(sortBy)) {
+            return fileRepository.findByOwnerIdAndTrashedFalseAndNameContainingIgnoreCaseOrderByCreatedAtDesc(ownerId, query, pageable);
+        }
+        
+        return fileRepository.findByOwnerIdAndTrashedFalseAndNameContainingIgnoreCase(ownerId, query, pageable);
     }
 }
